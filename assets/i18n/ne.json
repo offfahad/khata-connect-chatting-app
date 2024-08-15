@@ -94,5 +94,8 @@
     "google": "गुगल",
     "update": "अपडेट गर्नुहोस्",
     "addUser": "प्रयोगकर्ता थप्नुहोस्",
-    "loginWithGoogle": "गुगलसँग लग इन गर्नुहोस्"
+    "loginWithGoogle": "गुगलसँग लग इन गर्नुहोस्",
+    "customerEmailLabel": "इमेल ठेगाना",
+    "customerEmailLabelMeta": "ग्राहकको इमेल ठेगाना।",
+    "customerEmailError": "कृपया ग्राहकको इमेल ठेगाना टाइप गर्नुहोस्"
   }

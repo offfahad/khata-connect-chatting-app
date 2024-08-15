@@ -4,6 +4,7 @@ class Customer {
   String? name;
   String? phone;
   String? address;
+  String? email;
   String? image;
 
   Customer(
@@ -12,6 +13,7 @@ class Customer {
       this.name,
       this.phone,
       this.address,
+      this.email,
       this.image});
 
   factory Customer.fromDatabaseJson(Map<String, dynamic> data) => Customer(
@@ -20,6 +22,7 @@ class Customer {
       name: data['name'],
       phone: data['phone'],
       address: data['address'],
+      email: data['email'],
       image: data['image']);
 
   Map<String, dynamic> toDatabaseJson() => {
@@ -28,6 +31,7 @@ class Customer {
         'name': name,
         'phone': phone,
         'address': address,
+        'email': email,
         'image': image
       };
 }

@@ -42,7 +42,7 @@ class DatabaseProvider {
         'CREATE TABLE $businessTABLE (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, phone TEXT, address TEXT, logo BLOB, email TEXT, website TEXT, role TEXT, companyName TEXT)');
 
     await database.execute(
-        'CREATE TABLE $customerTABLE (id INTEGER PRIMARY KEY AUTOINCREMENT, businessId INTEGER, name TEXT, phone TEXT, address TEXT, image BLOB, FOREIGN KEY (businessId) REFERENCES $businessTABLE (id) ON DELETE CASCADE)');
+        'CREATE TABLE $customerTABLE (id INTEGER PRIMARY KEY AUTOINCREMENT, businessId INTEGER, name TEXT, phone TEXT, address TEXT, email TEXT, image BLOB, FOREIGN KEY (businessId) REFERENCES $businessTABLE (id) ON DELETE CASCADE)');
 
     await database.execute(
         'CREATE TABLE $transactionTABLE (id INTEGER PRIMARY KEY AUTOINCREMENT, businessId INTEGER, uid INTEGER, ttype TEXT, amount DOUBLE, comment TEXT, date TEXT, attachment BLOB, customer TEXT, FOREIGN KEY (businessId) REFERENCES $businessTABLE (id) ON DELETE CASCADE, FOREIGN KEY (uid) REFERENCES $customerTABLE (id) ON DELETE CASCADE)');

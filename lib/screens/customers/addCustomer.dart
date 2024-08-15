@@ -22,7 +22,7 @@ class _AddCustomerState extends State<AddCustomer> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String? _name, _phone, _address;
+  String? _name, _phone, _address, _email;
   File? _image;
   final ImagePicker _picker = ImagePicker();
   Customer _customer = Customer();
@@ -96,7 +96,8 @@ class _AddCustomerState extends State<AddCustomer> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ImportContacts()),
+                  MaterialPageRoute(
+                      builder: (context) => const ImportContacts()),
                 );
               },
             ),
@@ -117,7 +118,9 @@ class _AddCustomerState extends State<AddCustomer> {
               child: Column(
                 children: <Widget>[
                   customerImageWidget(),
-                  const SizedBox(height: 25,),
+                  const SizedBox(
+                    height: 25,
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
                       icon: const Icon(Icons.person),
@@ -162,6 +165,17 @@ class _AddCustomerState extends State<AddCustomer> {
                     ),
                     validator: null,
                     onSaved: (input) => _address = input,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      icon: const Icon(Icons.email),
+                      hintText: AppLocalizations.of(context)!
+                          .translate('customerEmailLabelMeta'),
+                      labelText: AppLocalizations.of(context)!
+                          .translate('customerEmailLabel'),
+                    ),
+                    validator: null,
+                    onSaved: (input) => _email = input,
                   ),
                   const Padding(
                     padding: EdgeInsets.all(36),
@@ -242,7 +256,9 @@ class _AddCustomerState extends State<AddCustomer> {
         ..phone = _phone
         ..address = _address
         ..image =
-            _image != null ? base64Encode(_image!.readAsBytesSync()) : null;
+            _image != null ? base64Encode(_image!.readAsBytesSync()) : null
+        ..email = _email;
+        
 
       final prefs = await SharedPreferences.getInstance();
       _customer.businessId = prefs.getInt('selected_business') ?? 0;

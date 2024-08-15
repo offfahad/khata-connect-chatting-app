@@ -22,7 +22,7 @@ class EditCustomer extends StatefulWidget {
 class _EditCustomerState extends State<EditCustomer> {
   final CustomerBloc customerBloc = CustomerBloc();
 
-  String? _name, _phone, _address;
+  String? _name, _phone, _address, _email;
   File? _image;
   final picker = ImagePicker();
 
@@ -80,8 +80,8 @@ class _EditCustomerState extends State<EditCustomer> {
           backgroundColor: Colors.transparent,
           title: const Text('Edit Customer',
               style: TextStyle(
-                //color: Colors.black,
-              )),
+                  //color: Colors.black,
+                  )),
           //iconTheme: const IconThemeData(color: Colors.black),
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -100,7 +100,9 @@ class _EditCustomerState extends State<EditCustomer> {
               child: Column(
                 children: <Widget>[
                   customerImageWidget(customer.image),
-                  SizedBox(height: 25,),
+                  SizedBox(
+                    height: 25,
+                  ),
                   TextFormField(
                     initialValue: customer.name,
                     decoration: const InputDecoration(
@@ -140,6 +142,16 @@ class _EditCustomerState extends State<EditCustomer> {
                     ),
                     validator: null, // Add validation if needed
                     onSaved: (input) => _address = input,
+                  ),
+                  TextFormField(
+                    initialValue: customer.email,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.email),
+                      hintText: 'Enter customer email',
+                      labelText: 'Email',
+                    ),
+                    validator: null, // Add validation if needed
+                    onSaved: (input) => _email = input,
                   ),
                   const SizedBox(height: 36),
                 ],
@@ -236,11 +248,13 @@ class _EditCustomerState extends State<EditCustomer> {
       customer
         ..name = _name
         ..phone = _phone
-        ..address = _address;
-
+        ..address = _address
+        ..email = _email;
+        
       if (_image != null) {
         customer.image = base64Encode(_image!.readAsBytesSync());
       }
+      
 
       await customerBloc.updateCustomer(customer);
 

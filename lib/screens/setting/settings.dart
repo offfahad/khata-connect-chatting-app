@@ -59,7 +59,7 @@ class _SettingsState extends State<Settings> {
       body: Column(
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 //color: Theme.of(context).primaryColor,
                 ),
             height: 150,
@@ -91,7 +91,7 @@ class _SettingsState extends State<Settings> {
           ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   //color: Theme.of(context).primaryColor,
                   ),
               child: Transform.translate(

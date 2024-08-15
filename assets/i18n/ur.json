@@ -94,6 +94,9 @@
   "google": "گوگل",
   "update": "اپ ڈیٹ کریں",
   "addUser": "صارف شامل کریں",
-  "loginWithGoogle": "گوگل کے ساتھ لاگ ان کریں"
+  "loginWithGoogle": "گوگل کے ساتھ لاگ ان کریں",
+  "customerEmailLabel": "ای میل پتہ",
+  "customerEmailLabelMeta": "گاہک کا ای میل پتہ۔",
+  "customerEmailError": "براہ کرم گاہک کا ای میل پتہ درج کریں"
 }
 

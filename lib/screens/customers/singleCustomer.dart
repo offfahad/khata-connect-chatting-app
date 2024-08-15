@@ -144,7 +144,7 @@ class _SingleCustomerState extends State<SingleCustomer> {
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                        height: 170,
+                        height: 180,
                         decoration: const BoxDecoration(
                             //color: Theme.of(context).primaryColor,
                             ),
@@ -235,6 +235,28 @@ class _SingleCustomerState extends State<SingleCustomer> {
                                             ),
                                           ],
                                         ),
+                                         if (customer.email != null &&
+                                          customer.email!.isNotEmpty)
+                                        Row(
+                                          children: <Widget>[
+                                            const Icon(
+                                              Icons.email,
+                                              //color: xLightWhite,
+                                              size: 12.0,
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 4, 4, 4),
+                                              child: Text(
+                                                customer.email!,
+                                                style: const TextStyle(
+                                                    //color: xLightWhite,
+                                                    fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -255,7 +277,8 @@ class _SingleCustomerState extends State<SingleCustomer> {
                                   Row(
                                     children: [
                                       TextButton.icon(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                        },
                                         icon: const Icon(Icons.share,
                                             size: 16.0, color: Colors.green),
                                         label: Text(

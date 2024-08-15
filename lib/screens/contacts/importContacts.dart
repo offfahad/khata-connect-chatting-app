@@ -51,6 +51,7 @@ class _ImportContactsState extends State<ImportContacts> {
 
       for (var contact in contacts) {
         var mobilenum = contact.phones!.toList();
+        var emailss = contact.emails!.toList();
         if (mobilenum.isNotEmpty) {
           var userContact = UserContact(
             name: contact.displayName ?? 'No Name',
@@ -58,6 +59,7 @@ class _ImportContactsState extends State<ImportContacts> {
             avatar: contact.avatar?.isNotEmpty == true
                 ? contact.avatar!
                 : defaultAvatar,
+             email: emailss.isNotEmpty ? emailss[0].value ?? 'No Email' : 'No Email',
           );
           contactsListTemp.add(userContact);
         }
@@ -71,11 +73,11 @@ class _ImportContactsState extends State<ImportContacts> {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
-          title: Text('Error'),
-          content: Text('Failed to load contacts. Please try again later.'),
+          title: const Text('Error'),
+          content: const Text('Failed to load contacts. Please try again later.'),
           actions: [
             PlatformDialogAction(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -154,11 +156,11 @@ class _ImportContactsState extends State<ImportContacts> {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
-          title: Text('Permission Denied'),
-          content: Text('Access to contact data denied'),
+          title: const Text('Permission Denied'),
+          content: const Text('Access to contact data denied'),
           actions: [
             PlatformDialogAction(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -170,11 +172,11 @@ class _ImportContactsState extends State<ImportContacts> {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
-          title: Text('Permission Restricted'),
-          content: Text('Contact data access restricted'),
+          title: const Text('Permission Restricted'),
+          content: const Text('Contact data access restricted'),
           actions: [
             PlatformDialogAction(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -339,11 +341,11 @@ class _ImportContactsState extends State<ImportContacts> {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
-          title: Text('Error'),
-          content: Text('Failed to import contacts. Please try again later.'),
+          title: const Text('Error'),
+          content: const Text('Failed to import contacts. Please try again later.'),
           actions: [
             PlatformDialogAction(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               },

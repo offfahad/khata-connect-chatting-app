@@ -94,5 +94,8 @@
   "google": "Google",
   "update": "Update",
   "addUser": "Add User",
-  "loginWithGoogle": "Login with Google"
+  "loginWithGoogle": "Login with Google",
+  "customerEmailLabel": "Email Address",
+  "customerEmailLabelMeta": "Email address of the customer.",
+  "customerEmailError": "Please type customer email address"
 }
