@@ -39,8 +39,6 @@ class APIs {
   // to return current user
   static User get user => auth.currentUser!;
 
-
-
   // for accessing firebase messaging (Push Notification)
   static FirebaseMessaging fMessaging = FirebaseMessaging.instance;
 
@@ -217,21 +215,21 @@ class APIs {
   }
 
 // for updating user information
-static Future<void> updateUserInfo() async {
-  try {
-    await firestore.collection('users').doc(user.uid).update({
-      'name': me.name,
-      'about': me.about,
-      'address': me.address,
-      'phoneNo': me.phoneNo,
-    });
-    log('User information updated successfully');
-  } catch (e, s) {
-    log('Failed to update user information: $e');
-    log('Stack trace: $s');
-    rethrow;
+  static Future<void> updateUserInfo() async {
+    try {
+      await firestore.collection('users').doc(user.uid).update({
+        'name': me.name,
+        'about': me.about,
+        'address': me.address,
+        'phoneNo': me.phoneNo,
+      });
+      log('User information updated successfully');
+    } catch (e, s) {
+      log('Failed to update user information: $e');
+      log('Stack trace: $s');
+      rethrow;
+    }
   }
-}
 
   // update profile picture of user
   static Future<void> updateProfilePicture(File file) async {
@@ -371,5 +369,18 @@ static Future<void> updateUserInfo() async {
         .collection('chats/${getConversationID(message.toId)}/messages/')
         .doc(message.sent)
         .update({'msg': updatedMsg});
+  }
+
+  static Future<ChatUser?> getUserByEmail(String email) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return ChatUser.fromJson(snapshot.docs.first.data());
+    }
+    return null; // Return null if user not found
   }
 }

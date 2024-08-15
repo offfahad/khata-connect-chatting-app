@@ -3,7 +3,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_notifications/api/apis.dart';
+import 'package:flutter_notifications/helpers/dialogs.dart';
 import 'package:flutter_notifications/helpers/generateCustomerTransaction.dart';
+import 'package:flutter_notifications/models/chat_user.dart';
+import 'package:flutter_notifications/models/message.dart';
+import 'package:flutter_notifications/screens/messages/chat_screen.dart';
+import 'package:flutter_notifications/screens/messages/messages_screen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -278,7 +284,36 @@ class _SingleCustomerState extends State<SingleCustomer> {
                                   Row(
                                     children: [
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          if (customer.email == null ||
+                                              customer.email!.isEmpty) {
+                                            Dialogs.showSnackbar(context,
+                                                "Please add customer's email first.");
+                                          } else {
+                                            String customerEmail =
+                                                customer.email!;
+                                            ChatUser? chatUser =
+                                                await APIs.getUserByEmail(
+                                                    customerEmail);
+                                            bool exists =
+                                                await APIs.addChatUser(
+                                                    customerEmail);
+                                            if (exists) {
+                                              // Dialogs.showSnackbar(context,
+                                              //     "Customer added to your chat list.");
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (_) =>
+                                                          ChatScreen(
+                                                            user: chatUser!,
+                                                          )));
+                                            } else {
+                                              Dialogs.showSnackbar(context,
+                                                  "Customer email does not register on this application. Please invite the customer to this application first.");
+                                            }
+                                          }
+                                        },
                                         icon: const Icon(Icons.chat,
                                             size: 16.0, color: Colors.green),
                                         // label: Text(

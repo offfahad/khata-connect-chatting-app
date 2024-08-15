@@ -11,12 +11,13 @@ class Dialogs {
 
   static void showLoading(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (_) => Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
-                color: Theme.of(context).colorScheme.secondary,
-                size: 60,
-              ),
-            ));
+      context: context,
+      builder: (_) => Center(
+        child: LoadingAnimationWidget.fourRotatingDots(
+          color: Theme.of(context).colorScheme.secondary,
+          size: 60,
+        ),
+      ),
+    );
   }
 }

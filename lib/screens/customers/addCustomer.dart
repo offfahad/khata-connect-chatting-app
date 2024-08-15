@@ -155,6 +155,7 @@ class _AddCustomerState extends State<AddCustomer> {
                     },
                     onSaved: (input) => _phone = input,
                   ),
+                  SizedBox(height: 16,),
                   TextFormField(
                     decoration: InputDecoration(
                       icon: const Icon(Icons.location_city),
@@ -162,6 +163,7 @@ class _AddCustomerState extends State<AddCustomer> {
                           .translate('customerAddressLabelMeta'),
                       labelText: AppLocalizations.of(context)!
                           .translate('customerAddressLabel'),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))
                     ),
                     validator: null,
                     onSaved: (input) => _address = input,

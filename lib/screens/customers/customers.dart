@@ -227,7 +227,7 @@ class _CustomersState extends State<Customers> {
                                 ),
                               )
                             : const Icon(Icons.person,
-                                color: Colors.purple, size: 24.0),
+                                color: Colors.white, size: 24.0),
                       ),
                       title: Text(
                         customer.name!,
@@ -282,7 +282,7 @@ class _CustomersState extends State<Customers> {
           final total = snapshot.data!;
           final ttype = total.isNegative ? "credit" : "payment";
           return SizedBox(
-            width: 130, // Set a fixed width for the trailing widget
+            width: 90, // Set a fixed width for the trailing widget
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -293,7 +293,7 @@ class _CustomersState extends State<Customers> {
                       amountFormat(context, total.abs()),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 12,
                         color: ttype == 'payment' ? Colors.green : Colors.red,
                       ),
                       overflow: TextOverflow.ellipsis,
