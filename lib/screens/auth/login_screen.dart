@@ -138,14 +138,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             SizedBox(
-              height: mq.height * .04,
+              height: mq.height * .08,
             ),
             // App logo
             Image.asset(
               'assets/images/logo2.png',
               width: mq.width * .9, // Adjust the width to make the logo smaller
             ),
-            //const SizedBox(height: 30), // Add space between logo and title
+            //const SizedBox(height: 30     ), // Add space between logo and title
             SizedBox(
               height: mq.height * .07,
             ),

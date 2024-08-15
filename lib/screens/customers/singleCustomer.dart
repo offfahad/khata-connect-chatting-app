@@ -7,6 +7,7 @@ import 'package:flutter_notifications/helpers/generateCustomerTransaction.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 
 import '../../blocs/customerBloc.dart';
 import '../../blocs/transactionBloc.dart';
@@ -235,7 +236,7 @@ class _SingleCustomerState extends State<SingleCustomer> {
                                             ),
                                           ],
                                         ),
-                                         if (customer.email != null &&
+                                      if (customer.email != null &&
                                           customer.email!.isNotEmpty)
                                         Row(
                                           children: <Widget>[
@@ -276,35 +277,61 @@ class _SingleCustomerState extends State<SingleCustomer> {
                                   ),
                                   Row(
                                     children: [
-                                      TextButton.icon(
-                                        onPressed: () {
-                                        },
-                                        icon: const Icon(Icons.share,
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(Icons.chat,
                                             size: 16.0, color: Colors.green),
-                                        label: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('shareText'),
-                                          style: const TextStyle(
-                                            //color: xLightWhite,
-                                            color: Colors.green,
-                                            fontSize: 14,
-                                          ),
-                                        ),
+                                        // label: Text(
+                                        //   AppLocalizations.of(context)!
+                                        //       .translate('Message'),
+                                        //   style: const TextStyle(
+                                        //     //color: xLightWhite,
+                                        //     color: Colors.green,
+                                        //     fontSize: 12,
+                                        //   ),
+                                        // ),
                                       ),
-                                      TextButton.icon(
+                                      IconButton(
                                         onPressed: () {
                                           generatePdf();
                                         },
                                         icon: const Icon(Icons.picture_as_pdf,
                                             size: 16.0, color: Colors.blue),
-                                        label: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('exportText'),
-                                          style: const TextStyle(
-                                            color: Colors.blue,
-                                            fontSize: 14,
-                                          ),
-                                        ),
+                                        // label: Text(
+                                        //   AppLocalizations.of(context)!
+                                        //       .translate('exportText'),
+                                        //   style: const TextStyle(
+                                        //     color: Colors.blue,
+                                        //     fontSize: 14,
+                                        //   ),
+                                        // ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          // Assuming the customer's phone number is not null
+                                          String customerPhone =
+                                              customer.phone!;
+
+                                          // Compose your message
+                                          String message =
+                                              'Hi, I would like to invite you to use this amazing app. Download it here: [app_link]';
+
+                                          // Share the SMS
+                                          Share.share(
+                                            message,
+                                            subject: 'App Invitation',
+                                          );
+                                        },
+                                        icon: const Icon(Icons.share,
+                                            size: 16.0, color: Colors.orange),
+                                        // label: Text(
+                                        //   AppLocalizations.of(context)!
+                                        //       .translate('exportText'),
+                                        //   style: const TextStyle(
+                                        //     color: Colors.blue,
+                                        //     fontSize: 14,
+                                        //   ),
+                                        // ),
                                       ),
                                     ],
                                   ),
@@ -429,7 +456,7 @@ class _SingleCustomerState extends State<SingleCustomer> {
           return Text(
             amountFormat(context, total.abs()),
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
               color: ttype == 'payment' ? xPlainTextGreen : xPlainTextRed,
             ),
@@ -449,7 +476,10 @@ class _SingleCustomerState extends State<SingleCustomer> {
         if (snapshot.hasData) {
           if (snapshot.data!.isEmpty) {
             return const Center(
-              child: Text("No transactions made yet!", style: TextStyle(color: Colors.black),),
+              child: Text(
+                "No transactions made yet!",
+                style: TextStyle(color: Colors.black),
+              ),
             );
           }
           return Column(
