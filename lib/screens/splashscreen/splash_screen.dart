@@ -2,8 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_notifications/my_home_page.dart';
-
 import '../../../../main.dart';
 import '../../../api/apis.dart';
 import '../auth/login_screen.dart';
@@ -22,20 +20,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 5), () {
-      //exit full-screen
-      // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      //      systemNavigationBarColor: Colors.white,
-      //      statusBarColor: Colors.white));
-
       log('\nUser: ${APIs.auth.currentUser}');
-
       //navigate
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (_) => APIs.auth.currentUser != null
-                ? MyHomePage()
+                ? const MessageScreen()
                 : const LoginScreen(),
           ));
     });

@@ -87,7 +87,6 @@ dependencies:
   # Google Gemini Ai Integration
   google_generative_ai: ^0.4.3
 
-  sqflite: 
   path_provider: 
   autocomplete_textfield:
   path: 
@@ -102,12 +101,9 @@ dependencies:
   back_button_interceptor: 
   contacts_service: 
   flutter_platform_widgets:
-  nepali_utils: 
-  nepali_date_picker: 
   flutter_native_image: 
   flutter_launcher_icons: 
   loading_animation_widget:
-
 
 dev_dependencies:
   intl_translation: 
@@ -144,8 +140,6 @@ flutter:
   assets:
     - assets/images/
     - assets/lottie/
-    - assets/i18n/
-    - assets/images/cv/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -158,17 +152,6 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Quicksand
-      fonts:
-        - asset: assets/fonts/Quicksand/Quicksand-Regular.ttf
-        - asset: assets/fonts/Quicksand/Quicksand-Bold.ttf
-          weight: 700
-    - family: Soleil
-      fonts:
-        - asset: assets/fonts/Soleil/Soleil-Regular.otf
-        - asset: assets/fonts/Soleil/Soleil-Bold.otf
-          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

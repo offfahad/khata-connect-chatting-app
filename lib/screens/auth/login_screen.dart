@@ -4,11 +4,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_notifications/helpers/appLocalizations.dart';
-import 'package:flutter_notifications/helpers/constants.dart';
-import 'package:flutter_notifications/my_home_page.dart';
 import 'package:flutter_notifications/providers/my_theme_provider.dart';
-import 'package:flutter_notifications/providers/stateNotifier.dart';
 import 'package:flutter_notifications/screens/userProfile/setup_profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isAnimate = false;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    //APIs.getSelfInfo();
     //await getTheLocale();
     //for auto triggering animation
     // Future.delayed(const Duration(milliseconds: 500), () {
@@ -52,12 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
         log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
 
         if (await APIs.userExists() && mounted) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => MyHomePage()));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (_) => const MessageScreen()));
         } else {
           await APIs.createUser().then((value) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => MyHomePage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (_) => SetupProfile(user: APIs.me)));
           });
         }
       }
@@ -101,8 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     //initializing media query (for getting device screen size)
     mq = MediaQuery.sizeOf(context);
-    final currentLocale = Provider.of<AppStateNotifier>(context).appLocale;
-    final buttonText = currentLocale == 'en' ? 'اردو' : 'English';
+    //final currentLocale = Provider.of<AppStateNotifier>(context).appLocale;
+    //final buttonText = currentLocale == 'en' ? 'اردو' : 'English';
     final themeStatus = Provider.of<MyThemeProvider>(context);
 
     return Scaffold(
@@ -113,30 +110,30 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  child: Text(
-                    buttonText,
-                    style: TextStyle(fontSize: 18, color: themeStatus.themeType ? Colors.white : Colors.black,),
-                    
-                  ),
-                  onPressed: () async {
-                    final newLocale = currentLocale == 'en' ? 'ur' : 'en';
-                    await changeLanguage(context, newLocale);
-                    setState(() {});
-                  },
-                ),
-                IconButton(
-                    onPressed: () {
-                      themeStatus.setTheme = !themeStatus.themeType;
-                    },
-                    icon: Icon(themeStatus.themeType
-                        ? Icons.dark_mode_outlined
-                        : Icons.light_mode_outlined))
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     // TextButton(
+            //     //   child: Text(
+            //     //     buttonText,
+            //     //     style: TextStyle(fontSize: 18, color: themeStatus.themeType ? Colors.white : Colors.black,),
+
+            //     //   ),
+            //     //   onPressed: () async {
+            //     //     final newLocale = currentLocale == 'en' ? 'ur' : 'en';
+            //     //     await changeLanguage(context, newLocale);
+            //     //     setState(() {});
+            //     //   },
+            //     // ),
+            //     IconButton(
+            //         onPressed: () {
+            //           themeStatus.setTheme = !themeStatus.themeType;
+            //         },
+            //         icon: Icon(themeStatus.themeType
+            //             ? Icons.dark_mode_outlined
+            //             : Icons.light_mode_outlined))
+            //   ],
+            // ),
             SizedBox(
               height: mq.height * .08,
             ),
@@ -150,8 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
               height: mq.height * .07,
             ),
             // Title
-            Text(
-              AppLocalizations.of(context)!.translate('welcomeTitle'),
+            const Text(
+              "Welcome to Khata Connect",
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -160,10 +157,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 10), // Add space between title and subtitle
 
             // Subtitle
-            Text(
-              AppLocalizations.of(context)!.translate('WeclomeSubtitle'),
+            const Text(
+              "Make your customers credit and debit\n transactions fast and accurate with chatting",
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
               ),
             ),
@@ -206,6 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
             // ),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
                 minimumSize: const Size.fromHeight(50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
@@ -222,11 +220,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               // Login with Google label
-              label: Text(
-                AppLocalizations.of(context)!.translate('loginWithGoogle'),
+              label: const Text(
+                "Login With Google",
                 style: TextStyle(
                   fontSize: 16,
-                  color: themeStatus.themeType ? Colors.white : Colors.black,
+                  color: Colors.black,
                   fontWeight: FontWeight.w500,
                 ),
               ),

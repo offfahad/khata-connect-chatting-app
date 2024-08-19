@@ -202,14 +202,14 @@ class _MessageCardState extends State<MessageCard> {
                           color: Colors.blue, size: 26),
                       name: 'Copy Text',
                       onTap: () async {
-                        await Clipboard.setData(
-                                ClipboardData(text: widget.message.msg))
-                            .then((value) {
-                          //for hiding bottom sheet
-                          Navigator.pop(context);
+                        // await Clipboard.setData(
+                        //         ClipboardData(text: widget.message.msg))
+                        //     .then((value) {
+                        //   //for hiding bottom sheet
+                        //   ///Navigator.pop(context);
 
-                          Dialogs.showSnackbar(context, 'Text Copied!');
-                        });
+                        //   Dialogs.showSnackbar(context, 'Text Copied!');
+                        //});
                       })
                   :
                   //save option
@@ -246,15 +246,16 @@ class _MessageCardState extends State<MessageCard> {
               //edit option
               if (widget.message.type == Type.text && isMe)
                 _OptionItem(
-                    icon: const Icon(Icons.edit, color: Colors.blue, size: 26),
-                    name: 'Edit Message',
-                    onTap: () {
-                      //for hiding bottom sheet
-                      Navigator.pop(context);
+                  icon: const Icon(Icons.edit, color: Colors.blue, size: 26),
+                  name: 'Edit Message',
+                  onTap: () {
+                    // For hiding bottom sheet
+                    //Navigator.pop(context);
 
-                      _showMessageUpdateDialog();
-                    }),
-
+                    // Show message update dialog
+                    //_showMessageUpdateDialog();
+                  },
+                ),
               //delete option
               if (isMe)
                 _OptionItem(
@@ -299,62 +300,61 @@ class _MessageCardState extends State<MessageCard> {
     String updatedMsg = widget.message.msg;
 
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              contentPadding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 20, bottom: 10),
+      context: context,
+      builder: (_) => AlertDialog(
+        contentPadding:
+            const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        title: const Row(
+          children: [
+            Icon(
+              Icons.message,
+              color: Colors.blue,
+              size: 28,
+            ),
+            Text(' Update Message')
+          ],
+        ),
+        content: TextFormField(
+          initialValue: updatedMsg,
+          maxLines: null,
+          onChanged: (value) => updatedMsg = value,
+          decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)))),
+        ),
+        actions: [
+          // Cancel button
+          MaterialButton(
+              onPressed: () {
+                // Hide alert dialog
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue, fontSize: 16),
+              )),
+          // Update button
+          MaterialButton(
+              onPressed: () async {
+                // Hide alert dialog
+                Navigator.pop(context);
 
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-
-              //title
-              title: const Row(
-                children: [
-                  Icon(
-                    Icons.message,
-                    color: Colors.blue,
-                    size: 28,
-                  ),
-                  Text(' Update Message')
-                ],
-              ),
-
-              //content
-              content: TextFormField(
-                initialValue: updatedMsg,
-                maxLines: null,
-                onChanged: (value) => updatedMsg = value,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15)))),
-              ),
-
-              //actions
-              actions: [
-                //cancel button
-                MaterialButton(
-                    onPressed: () {
-                      //hide alert dialog
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    )),
-
-                //update button
-                MaterialButton(
-                    onPressed: () {
-                      //hide alert dialog
-                      Navigator.pop(context);
-                      APIs.updateMessage(widget.message, updatedMsg);
-                    },
-                    child: const Text(
-                      'Update',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    ))
-              ],
-            ));
+                // Ensure the widget is still mounted before proceeding
+                if (mounted) {
+                  // Update the message
+                  await APIs.updateMessage(widget.message, updatedMsg);
+                  // Optionally, show a success snackbar or handle other UI updates here
+                }
+              },
+              child: const Text(
+                'Update',
+                style: TextStyle(color: Colors.blue, fontSize: 16),
+              ))
+        ],
+      ),
+    );
   }
 }
 
