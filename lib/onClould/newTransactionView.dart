@@ -66,7 +66,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                   children: [
                     Center(
                       child: Container(
-                        height: mq.height * 0.3,
+                        height: mq.height * 0.28,
                         width: mq.width * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -588,7 +588,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                       case ConnectionState.waiting:
                       case ConnectionState.none:
                         return const SizedBox();
-              
+
                       //if some or all data is loaded then show it
                       case ConnectionState.active:
                       case ConnectionState.done:
@@ -597,7 +597,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                 ?.map((e) => CommentFirebase.fromJson(e.data()))
                                 .toList() ??
                             [];
-              
+
                         if (_list.isNotEmpty) {
                           return ListView.builder(
                               reverse: true,
@@ -605,11 +605,15 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                               padding: EdgeInsets.only(top: mq.height * .01),
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return CommentCard(comment: _list[index]);
+                                return CommentCard(
+                                  comment: _list[index],
+                                  currentUserImageUrl: APIs.me.image,
+                                  chatUserImageUrl: widget.chatUser.image,
+                                );
                               });
                         } else {
                           return const Center(
-                            child: Text('No Comments Yet! 👋',
+                            child: Text('No Comments Added Yet! 👋',
                                 style: TextStyle(fontSize: 12)),
                           );
                         }
@@ -667,15 +671,14 @@ class _NewTransactionViewState extends State<NewTransactionView> {
   Widget _chatInput() {
     return Padding(
       padding: EdgeInsets.symmetric(
-          vertical: mq.height * .01, horizontal: mq.width * .025),
+          vertical: mq.height * .01, horizontal: mq.width * .020),
       child: Row(
         children: [
           Expanded(
             child: Card(
               color: Colors.white,
               shape: const RoundedRectangleBorder(
-                
-                  borderRadius: BorderRadius.all(Radius.circular(12))),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
               child: Row(
                 children: [
                   IconButton(
@@ -690,7 +693,6 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                   ),
                   Expanded(
                     child: TextField(
-                      
                       controller: _textController,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
@@ -699,8 +701,10 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                           setState(() => _showEmoji = !_showEmoji);
                       },
                       decoration: const InputDecoration(
-                          hintText: 'Type Something...',
-                          border: InputBorder.none, fillColor: Colors.white),
+                        hintText: 'Type Comments...',
+                        hintStyle: TextStyle(fontSize: 12),
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
                   // IconButton(
@@ -754,6 +758,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                       widget.transaction, _textController.text);
                 }
                 _textController.text = '';
+                FocusScope.of(context).unfocus();
               }
             },
             minWidth: 0,
