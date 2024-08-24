@@ -104,6 +104,8 @@ dependencies:
   flutter_native_image: 
   flutter_launcher_icons: 
   loading_animation_widget:
+  image:
+  uuid: ^4.4.2
 
 dev_dependencies:
   intl_translation: 

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_notifications/api/apis.dart';
 import 'package:flutter_notifications/helpers/dialogs.dart';
 import 'package:flutter_notifications/main.dart';
-import 'package:flutter_notifications/onClould/newTransactionsModel.dart';
+import 'package:flutter_notifications/models/newTransactionsModel.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import '../models/chat_user.dart';
 
 class AddTransactionPage extends StatefulWidget {
@@ -76,6 +77,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
 
       // Use the selected date (_date) for the timestamp
       final transaction = TransactionFirebase(
+        id: const Uuid().v4(),
         toId: widget.chatUser.id,
         type: type,
         amount: amount,
@@ -271,8 +273,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size.fromHeight(50),
-                              backgroundColor:
-                                  Colors.grey.shade500,
+                              backgroundColor: Colors.grey.shade500,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),

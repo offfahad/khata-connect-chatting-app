@@ -1,5 +1,6 @@
 class TransactionFirebase {
   TransactionFirebase({
+    required this.id,
     required this.toId,
     required this.type,
     required this.amount,
@@ -10,7 +11,7 @@ class TransactionFirebase {
     required this.updateBy,
     required this.updateTimestamp,
   });
-
+  late final String id;
   late final String toId;
   late final String type;
   late final double amount;
@@ -22,6 +23,7 @@ class TransactionFirebase {
   late final String updateTimestamp;
 
   TransactionFirebase.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
     toId = json['toId'].toString();
     type = json['type'].toString();
     amount = double.parse(json['amount'].toString());
@@ -35,6 +37,7 @@ class TransactionFirebase {
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
+    data['id'] = id;
     data['toId'] = toId;
     data['type'] = type;
     data['amount'] = amount;

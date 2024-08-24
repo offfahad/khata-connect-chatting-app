@@ -3,7 +3,7 @@ import 'package:flutter_notifications/api/apis.dart';
 import 'package:flutter_notifications/helpers/dialogs.dart';
 import 'package:flutter_notifications/main.dart';
 import 'package:flutter_notifications/onClould/newAddTransactions.dart';
-import 'package:flutter_notifications/onClould/newTransactionsModel.dart';
+import 'package:flutter_notifications/models/newTransactionsModel.dart';
 import 'package:intl/intl.dart';
 import '../models/chat_user.dart';
 
@@ -97,6 +97,7 @@ class _EditTransactionPageState extends State<EditTransactionPage> {
       Dialogs.showLoading(context);
 
       final updatedTransaction = TransactionFirebase(
+        id: widget.transaction.id,
         toId: widget.chatUser.id,
         type: _selectedType,
         amount: double.tryParse(_amountController.text) ?? 0.0,

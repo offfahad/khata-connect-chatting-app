@@ -4,7 +4,7 @@ import 'package:flutter_notifications/api/apis.dart';
 import 'package:flutter_notifications/helpers/dialogs.dart';
 import 'package:flutter_notifications/main.dart';
 import 'package:flutter_notifications/onClould/newAddTransactions.dart';
-import 'package:flutter_notifications/onClould/newTransactionsModel.dart';
+import 'package:flutter_notifications/models/newTransactionsModel.dart';
 import 'package:flutter_notifications/onClould/newTransactionView.dart';
 import 'package:flutter_notifications/screens/messages/chat_screen.dart';
 import 'package:flutter_notifications/screens/messages/messages_screen.dart';
@@ -122,14 +122,16 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                               ),
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 8, 0),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Container(
-                                        padding:
-                                            const EdgeInsets.fromLTRB(0, 0, 0, 4),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 4),
                                         child: Text(
                                           widget.chatUser.name,
                                           style: const TextStyle(fontSize: 16),
@@ -162,12 +164,13 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                             ),
                                             Expanded(
                                               child: Container(
-                                                padding: const EdgeInsets.fromLTRB(
-                                                    8, 4, 4, 4),
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        8, 4, 4, 4),
                                                 child: Text(
                                                   widget.chatUser.address,
-                                                  style:
-                                                      const TextStyle(fontSize: 12),
+                                                  style: const TextStyle(
+                                                      fontSize: 12),
                                                 ),
                                               ),
                                             ),
@@ -181,12 +184,13 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                               size: 12.0,
                                             ),
                                             Container(
-                                              padding: const EdgeInsets.fromLTRB(
-                                                  8, 4, 4, 4),
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 4, 4, 4),
                                               child: Text(
                                                 widget.chatUser.email,
-                                                style:
-                                                    const TextStyle(fontSize: 12),
+                                                style: const TextStyle(
+                                                    fontSize: 12),
                                               ),
                                             ),
                                           ],
@@ -445,6 +449,23 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                             'debit';
                                     final isMadeByMe =
                                         transaction.fromId == APIs.user.uid;
+                                    // Determine the status label
+                                    String transactionStatus;
+                                    if (isMadeByMe) {
+                                      // If the transaction was made by you, show the original status
+                                      transactionStatus =
+                                          transaction.type.toLowerCase() ==
+                                                  'debit'
+                                              ? 'Received'
+                                              : 'Given';
+                                    } else {
+                                      // If the transaction was made by someone else, invert the status
+                                      transactionStatus =
+                                          transaction.type.toLowerCase() ==
+                                                  'debit'
+                                              ? 'Given'
+                                              : 'Received';
+                                    }
 
                                     Widget? statusIcon;
                                     if (transaction.status == 'Approved') {
@@ -516,7 +537,8 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,
-                                                    color: transaction.status == 'Approved' 
+                                                    color: transaction.status ==
+                                                            'Approved'
                                                         ? Colors.green
                                                         : Colors.red,
                                                   ),
@@ -525,9 +547,7 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                                     height:
                                                         4), // Spacing between amount and type
                                                 Text(
-                                                  isDebit
-                                                      ? 'Recevied'
-                                                      : 'Given',
+                                                  transactionStatus,
                                                   style: const TextStyle(
                                                     fontSize: 10,
                                                     color: Colors.black54,

@@ -7,6 +7,7 @@ import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_notifications/myTheme.dart';
 import 'package:flutter_notifications/providers/my_theme_provider.dart';
+import 'package:flutter_notifications/services/local_notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   await _initializeFirebase();
+  await LocalNotificationService().init();
 
   //for setting orientation to portrait only
   SystemChrome.setPreferredOrientations(
@@ -69,6 +71,7 @@ Future<void> _initializeFirebase() async {
     id: 'chats',
     importance: NotificationImportance.IMPORTANCE_HIGH,
     name: 'Chats',
+    
   );
 
   log('\nNotification Channel Result: $result');

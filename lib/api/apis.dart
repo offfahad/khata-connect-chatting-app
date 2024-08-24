@@ -6,8 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_notifications/onClould/newTransactionsModel.dart';
+import 'package:flutter_notifications/models/comments.dart';
+import 'package:flutter_notifications/models/newTransactionsModel.dart';
+import 'package:flutter_notifications/services/local_notification_service.dart';
 import 'package:http/http.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/chat_user.dart';
 import '../models/message.dart';
@@ -55,13 +58,8 @@ class APIs {
     });
 
     //for handling foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      log('Got a message whilst in the foreground!');
-      log('Message data: ${message.data}');
-
-      if (message.notification != null) {
-        log('Message also contained a notification: ${message.notification}');
-      }
+    FirebaseMessaging.onMessage.listen((event) async {
+      LocalNotificationService().showNotification(event);
     });
   }
 
@@ -75,6 +73,9 @@ class APIs {
           "notification": {
             "title": me.name, //our name should be send
             "body": msg,
+          },
+          "data": {
+            "image": me.image, // Include the image URL in the data payload
           },
         }
       };
@@ -407,12 +408,6 @@ class APIs {
           .doc(chatUser.id)
           .delete();
 
-      // Optionally: delete the chat conversation from the "chats" collection
-      // await firestore
-      //     .collection('chats')
-      //     .doc(getConversationID(chatUser.id))
-      //     .delete();
-
       log('Chat with ${chatUser.name} deleted successfully');
     } catch (e) {
       log('Failed to delete chat with ${chatUser.name}: $e');
@@ -437,7 +432,7 @@ class APIs {
       // Get the reference to the specific transaction document
       final ref = firestore
           .collection('chats/${getConversationID(user.id)}/transactions/')
-          .doc(transaction.timestamp);
+          .doc(transaction.id);
 
       // Update the status field and track who made the update
       await ref.update({
@@ -478,27 +473,29 @@ class APIs {
   static Future<void> sendTransaction(
       ChatUser chatUser, TransactionFirebase transaction) async {
     try {
-      // Transaction timestamp (also used as ID)
-      final time = transaction.timestamp;
+      if (transaction.id.isEmpty) {
+        transaction.id = const Uuid().v4();
+      }
 
       // Create a new transaction instance
       final transactionData = {
+        'id': transaction.id,
         'toId': chatUser.id,
         'type': transaction.type,
         'amount': transaction.amount,
         'description': transaction.description,
         'status': transaction.status,
-        'timestamp': time,
+        'timestamp': transaction.timestamp,
         'fromId': user.uid,
         'updateBy': user.uid,
-        'updateTimestamp': time,
+        'updateTimestamp': transaction.timestamp,
       };
 
       // Add transaction to the user's transaction collection
       final ref = firestore
           .collection('chats/${getConversationID(chatUser.id)}/transactions/');
 
-      await ref.doc(time).set(transactionData);
+      await ref.doc(transaction.id).set(transactionData);
 
       log('Transaction sent: ${transaction.amount}');
     } catch (e) {
@@ -592,10 +589,11 @@ class APIs {
       // Get the reference to the transaction document
       final ref = firestore
           .collection('chats/${getConversationID(chatUser.id)}/transactions/')
-          .doc(updatedTransaction.timestamp);
+          .doc(updatedTransaction.id);
 
       // Prepare updated data
       final updatedData = {
+        'id': updatedTransaction.id,
         'toId': chatUser.id,
         'type': updatedTransaction.type,
         'amount': updatedTransaction.amount,
@@ -622,7 +620,7 @@ class APIs {
     try {
       final doc = await firestore
           .collection('chats/${getConversationID(chatUser.id)}/transactions/')
-          .doc(transaction.timestamp)
+          .doc(transaction.id)
           .get();
 
       if (doc.exists) {
@@ -647,7 +645,7 @@ class APIs {
       if (currentUser != null && currentUser.uid == transaction.fromId) {
         await firestore
             .collection('chats/${getConversationID(chatUser.id)}/transactions/')
-            .doc(transaction.timestamp)
+            .doc(transaction.id)
             .delete();
 
         log('Transaction deleted successfully');
@@ -686,38 +684,47 @@ class APIs {
       ChatUser chatUser, TransactionFirebase transaction) {
     return FirebaseFirestore.instance
         .collection('chats/${getConversationID(chatUser.id)}/transactions/')
-        .doc(transaction.timestamp)
+        .doc(transaction.id)
         .snapshots()
-        .map((snapshot) => TransactionFirebase.fromJson(snapshot
-            .data()!)); // Assuming you have a fromJson method in TransactionFirebase
+        .map(
+          (snapshot) => TransactionFirebase.fromJson(
+            snapshot.data()!,
+          ),
+        ); // Assuming you have a fromJson method in TransactionFirebase
   }
 
-// Method to delete all transactions for a specific user
-  // static Future<void> deleteAllTransactionsForUser(ChatUser chatUser) async {
-  //   try {
-  //     // Reference to the transactions collection for the user
-  //     final transactionsCollection = firestore
-  //         .collection('chats/${getConversationID(chatUser.id)}/transactions/');
+  static Future<void> addTransactionsComments(ChatUser chatUser,
+      TransactionFirebase transaction, String commentText) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
 
-  //     // Fetch all transaction documents for the user
-  //     final snapshot = await transactionsCollection.get();
+    final CommentFirebase comment = CommentFirebase(
+      commentText: commentText,
+      read: '',
+      timestamp: time,
+      fromId: user.uid,
+      toId: chatUser.id,
+    );
 
-  //     if (snapshot.docs.isEmpty) {
-  //       log('No transactions found for user');
-  //       return;
-  //     }
+    final ref = FirebaseFirestore.instance
+        .collection('chats/${getConversationID(chatUser.id)}/transactions/')
+        .doc(transaction.id)
+        .collection('comments/');
 
-  //     // Create a batch to delete all documents
-  //     WriteBatch batch = firestore.batch();
-  //     for (final doc in snapshot.docs) {
-  //       batch.delete(doc.reference);
-  //     }
+    try {
+      await ref.doc(time).set(comment.toJson());
+      //await sendPushNotification(chatUser, commentText);
+    } catch (e) {
+      log('Failed to add comment: $e');
+    }
+  }
 
-  //     // Commit the batch
-  //     await batch.commit();
-  //     log('All transactions successfully deleted');
-  //   } catch (e) {
-  //     log('Failed to delete transactions: $e');
-  //   }
-  // }
+  // for getting all messages of a specific conversation from firestore database
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllComments(
+      ChatUser user, TransactionFirebase transaction) {
+    return firestore
+        .collection(
+            'chats/${getConversationID(user.id)}/transactions/${transaction.id}/comments/')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
 }
