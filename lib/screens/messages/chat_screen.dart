@@ -73,7 +73,11 @@ class _ChatScreenState extends State<ChatScreen> {
                               padding: EdgeInsets.only(top: mq.height * .01),
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return MessageCard(message: _list[index]);
+                                return MessageCard(
+                                    message: _list[index],
+                                    currentUserImageUrl: APIs.me.image,
+                                    chatUserImageUrl: widget.user.image,
+                                    isChatUserOnline: widget.user.isOnline);
                               });
                         } else {
                           return const Center(

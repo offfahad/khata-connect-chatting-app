@@ -185,7 +185,7 @@ class CommentCard extends StatelessWidget {
               children: isCurrentUser
                   ? [
                       ListTile(
-                        leading: Icon(Icons.copy),
+                        leading: Icon(Icons.copy_all_rounded, color: Colors.blue,),
                         title: Text('Copy'),
                         onTap: () async {
                           // Copy the comment text to clipboard
@@ -197,15 +197,16 @@ class CommentCard extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        leading: Icon(Icons.edit),
+                        leading: Icon(Icons.edit, color: Colors.blue,),
                         title: Text('Edit'),
                         onTap: () {
                           // Implement edit functionality
-                          Navigator.pop(context);
+                          _showEditCommentDialog(context);
+                        
                         },
                       ),
                       ListTile(
-                        leading: Icon(Icons.delete),
+                        leading: Icon(Icons.delete, color: Colors.red,),
                         title: Text('Delete'),
                         onTap: () async {
                           // Call delete function
@@ -216,19 +217,19 @@ class CommentCard extends StatelessWidget {
                       ),
                       Divider(),
                       ListTile(
-                        leading: Icon(Icons.access_time),
+                        leading: Icon(Icons.remove_red_eye, color: Colors.green,),
                         title: Text(
                             'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: comment.timestamp)}'),
                       ),
                       ListTile(
-                        leading: Icon(Icons.access_time),
+                        leading: Icon(Icons.remove_red_eye, color: Colors.blue,),
                         title: Text(
                             'Read At: ${comment.read.isNotEmpty ? '${MyDateUtil.getMessageTime(context: context, time: comment.read)}' : 'Not seen yet'}'),
                       ),
                     ]
                   : [
                       ListTile(
-                        leading: Icon(Icons.copy),
+                        leading: Icon(Icons.copy_all_rounded, color: Colors.blue,),
                         title: Text('Copy'),
                         onTap: () async {
                           // Copy the comment text to clipboard
@@ -241,12 +242,12 @@ class CommentCard extends StatelessWidget {
                       ),
                       Divider(),
                       ListTile(
-                        leading: Icon(Icons.access_time),
+                        leading: Icon(Icons.remove_red_eye, color: Colors.green,),
                         title: Text(
-                            'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: comment.timestamp)}'),
+                            'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: comment.timestamp)}',),
                       ),
                       ListTile(
-                        leading: Icon(Icons.access_time),
+                        leading: Icon(Icons.remove_red_eye, color: Colors.blue,),
                         title: Text(
                             'Read At: ${comment.read.isNotEmpty ? '${MyDateUtil.getMessageTime(context: context, time: comment.read)}' : 'Not seen yet'}'),
                       ),
@@ -255,6 +256,47 @@ class CommentCard extends StatelessWidget {
               //  : 'Read At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.read)}',
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void _showEditCommentDialog(BuildContext context) {
+    final TextEditingController _controller =
+        TextEditingController(text: comment.commentText);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Comment'),
+          content: TextField(
+            controller: _controller,
+            maxLines: null, // Allows multiple lines
+            decoration: const InputDecoration(
+              hintText: 'Enter your updated comment',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cancel button
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final updatedComment = _controller.text.trim();
+                if (updatedComment.isNotEmpty) {
+                  await APIs.editComment(
+                      chatUser, comment, transaction, updatedComment);
+                  Navigator.of(context).pop(); // Close dialog
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('Update'),
+            ),
+          ],
         );
       },
     );
