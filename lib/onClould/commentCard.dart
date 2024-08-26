@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import Clipboard package
 import 'package:flutter_notifications/api/apis.dart';
@@ -16,14 +18,14 @@ class CommentCard extends StatelessWidget {
   final bool isChatUserOnline;
 
   const CommentCard({
-    Key? key,
+    super.key,
     required this.comment,
     required this.currentUserImageUrl,
     required this.chatUserImageUrl,
     required this.transaction,
     required this.isChatUserOnline,
     required this.chatUser,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -185,8 +187,8 @@ class CommentCard extends StatelessWidget {
               children: isCurrentUser
                   ? [
                       ListTile(
-                        leading: Icon(Icons.copy_all_rounded, color: Colors.blue,),
-                        title: Text('Copy'),
+                        leading: const Icon(Icons.copy_all_rounded, color: Colors.blue,),
+                        title: const Text('Copy'),
                         onTap: () async {
                           // Copy the comment text to clipboard
                           await Clipboard.setData(
@@ -197,8 +199,8 @@ class CommentCard extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        leading: Icon(Icons.edit, color: Colors.blue,),
-                        title: Text('Edit'),
+                        leading: const Icon(Icons.edit, color: Colors.blue,),
+                        title: const Text('Edit'),
                         onTap: () {
                           // Implement edit functionality
                           _showEditCommentDialog(context);
@@ -206,8 +208,8 @@ class CommentCard extends StatelessWidget {
                         },
                       ),
                       ListTile(
-                        leading: Icon(Icons.delete, color: Colors.red,),
-                        title: Text('Delete'),
+                        leading: const Icon(Icons.delete, color: Colors.red,),
+                        title: const Text('Delete'),
                         onTap: () async {
                           // Call delete function
                           await APIs.deleteComment(
@@ -215,22 +217,22 @@ class CommentCard extends StatelessWidget {
                           Navigator.pop(context);
                         },
                       ),
-                      Divider(),
+                      const Divider(),
                       ListTile(
-                        leading: Icon(Icons.remove_red_eye, color: Colors.green,),
+                        leading: const Icon(Icons.remove_red_eye, color: Colors.green,),
                         title: Text(
                             'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: comment.timestamp)}'),
                       ),
                       ListTile(
-                        leading: Icon(Icons.remove_red_eye, color: Colors.blue,),
+                        leading: const Icon(Icons.remove_red_eye, color: Colors.blue,),
                         title: Text(
-                            'Read At: ${comment.read.isNotEmpty ? '${MyDateUtil.getMessageTime(context: context, time: comment.read)}' : 'Not seen yet'}'),
+                            'Read At: ${comment.read.isNotEmpty ? MyDateUtil.getMessageTime(context: context, time: comment.read) : 'Not seen yet'}'),
                       ),
                     ]
                   : [
                       ListTile(
-                        leading: Icon(Icons.copy_all_rounded, color: Colors.blue,),
-                        title: Text('Copy'),
+                        leading: const Icon(Icons.copy_all_rounded, color: Colors.blue,),
+                        title: const Text('Copy'),
                         onTap: () async {
                           // Copy the comment text to clipboard
                           await Clipboard.setData(
@@ -240,16 +242,16 @@ class CommentCard extends StatelessWidget {
                           Dialogs.showSnackbar(context, 'Comment Copied!');
                         },
                       ),
-                      Divider(),
+                      const Divider(),
                       ListTile(
-                        leading: Icon(Icons.remove_red_eye, color: Colors.green,),
+                        leading: const Icon(Icons.remove_red_eye, color: Colors.green,),
                         title: Text(
-                            'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: comment.timestamp)}',),
+                            'Sent At: ${MyDateUtil.getMessageTime(context: context, time: comment.timestamp)}',),
                       ),
                       ListTile(
-                        leading: Icon(Icons.remove_red_eye, color: Colors.blue,),
+                        leading: const Icon(Icons.remove_red_eye, color: Colors.blue,),
                         title: Text(
-                            'Read At: ${comment.read.isNotEmpty ? '${MyDateUtil.getMessageTime(context: context, time: comment.read)}' : 'Not seen yet'}'),
+                            'Read At: ${comment.read.isNotEmpty ? MyDateUtil.getMessageTime(context: context, time: comment.read) : 'Not seen yet'}'),
                       ),
                     ],
               // ? 'Read At: Not seen yet'
@@ -282,7 +284,7 @@ class CommentCard extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(); // Cancel button
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
@@ -294,7 +296,7 @@ class CommentCard extends StatelessWidget {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text('Update'),
+              child: const Text('Update'),
             ),
           ],
         );

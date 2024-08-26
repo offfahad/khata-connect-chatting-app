@@ -206,6 +206,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(
                       Icons.emoji_emotions,
                       size: 25,
+                      color: Colors.blue,
                     ),
                   ),
                   Expanded(
@@ -214,8 +215,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       onTap: () {
-                        if (_showEmoji)
+                        if (_showEmoji) {
                           setState(() => _showEmoji = !_showEmoji);
+                          FocusScope.of(context).unfocus();
+                        }
                       },
                       decoration: const InputDecoration(
                           hintText: 'Type Something...',
@@ -238,6 +241,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(
                       Icons.image,
                       size: 26,
+                      color: Colors.blue,
                     ),
                   ),
                   IconButton(
@@ -255,6 +259,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     icon: const Icon(
                       Icons.camera_alt_rounded,
                       size: 26,
+                      color: Colors.blue,
                     ),
                   ),
                   SizedBox(width: mq.width * .02),
@@ -265,6 +270,10 @@ class _ChatScreenState extends State<ChatScreen> {
           MaterialButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
+                // Close the emoji picker if open
+                if (_showEmoji) {
+                  setState(() => _showEmoji = false);
+                }
                 if (_list.isEmpty) {
                   APIs.sendFirstMessage(
                       widget.user, _textController.text, Type.text);

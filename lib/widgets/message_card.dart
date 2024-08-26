@@ -267,7 +267,7 @@ class MessageCard extends StatelessWidget {
                       color: Colors.green,
                     ),
                     title: Text(
-                        'Sent At: ${MyDateUtil.getFormattedTime(context: context, time: message.sent)}'),
+                        'Sent At: ${MyDateUtil.getMessageTime(context: context, time: message.sent)}'),
                   ),
                   ListTile(
                     leading: const Icon(

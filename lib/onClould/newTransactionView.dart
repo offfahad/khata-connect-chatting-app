@@ -1,3 +1,4 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_notifications/helpers/dialogs.dart';
 import 'package:flutter_notifications/main.dart';
@@ -115,9 +116,12 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                       height: 15.0,
                                       width: 15.0,
                                       decoration: BoxDecoration(
-                                        color: APIs.auth.currentUser?.uid == widget.transaction.fromId ? Colors.green : widget.chatUser.isOnline
+                                        color: APIs.auth.currentUser?.uid ==
+                                                widget.transaction.fromId
                                             ? Colors.green
-                                            : Colors.red,
+                                            : widget.chatUser.isOnline
+                                                ? Colors.green
+                                                : Colors.red,
                                         shape: BoxShape.circle,
                                         border: Border.all(
                                           color: Colors
@@ -661,6 +665,14 @@ class _NewTransactionViewState extends State<NewTransactionView> {
               ),
             ),
             _chatInput(),
+            if (_showEmoji)
+              SizedBox(
+                height: mq.height * .35,
+                child: EmojiPicker(
+                  textEditingController: _textController,
+                  config: const Config(),
+                ),
+              )
           ],
         ),
       ),
@@ -721,8 +733,8 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      //FocusScope.of(context).unfocus();
-                      //setState(() => _showEmoji = !_showEmoji);
+                      FocusScope.of(context).unfocus();
+                      setState(() => _showEmoji = !_showEmoji);
                     },
                     icon: const Icon(
                       Icons.emoji_emotions,
@@ -736,8 +748,10 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       onTap: () {
-                        if (_showEmoji)
+                        if (_showEmoji) {
                           setState(() => _showEmoji = !_showEmoji);
+                        }
+                        FocusScope.of(context).unfocus();
                       },
                       decoration: const InputDecoration(
                         hintText: 'Type Comments...',
@@ -789,14 +803,24 @@ class _NewTransactionViewState extends State<NewTransactionView> {
           MaterialButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
+                setState(() {
+                  // Close the emoji picker
+                  _showEmoji = false;
+                });
+
+                // Send the message
                 if (_list.isEmpty) {
-                  APIs.addTransactionsComments(widget.chatUser,
-                      widget.transaction, _textController.text);
+                  APIs.sendFirstMessage(
+                      widget.chatUser, _textController.text, Type.text);
                 } else {
-                  APIs.addTransactionsComments(widget.chatUser,
-                      widget.transaction, _textController.text);
+                  APIs.sendMessage(
+                      widget.chatUser, _textController.text, Type.text);
                 }
-                _textController.text = '';
+
+                // Clear the text field
+                _textController.clear();
+
+                // Optionally, unfocus the text field to close the keyboard
                 FocusScope.of(context).unfocus();
               }
             },
