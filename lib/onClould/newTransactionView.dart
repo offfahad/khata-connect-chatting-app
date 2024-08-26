@@ -25,6 +25,7 @@ class NewTransactionView extends StatefulWidget {
 class _NewTransactionViewState extends State<NewTransactionView> {
   final _textController = TextEditingController();
   List<CommentFirebase> _list = [];
+
   //showEmoji -- for storing value of showing or hiding emoji
   //isUploading -- for checking if image is uploading or not?
   bool _showEmoji = false, _isUploading = false;
@@ -61,6 +62,16 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                       child: Text('No transaction data available.'));
                 }
                 final transaction_data = snapshot.data!;
+                String transactionStatus;
+
+                final isMadeByMe = transaction_data.fromId == APIs.user.uid;
+                transactionStatus = isMadeByMe
+                    ? (transaction_data.type.toLowerCase() == 'debit'
+                        ? 'Received'
+                        : 'Given')
+                    : (transaction_data.type.toLowerCase() == 'debit'
+                        ? 'Given'
+                        : 'Received');
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -83,14 +94,40 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                           children: <Widget>[
                             Container(
                               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                              child: CircleAvatar(
-                                radius: 36.0,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage: NetworkImage(
-                                    APIs.auth.currentUser?.uid ==
-                                            widget.transaction.fromId
-                                        ? APIs.me.image
-                                        : widget.chatUser.image),
+                              child: Stack(
+                                children: [
+                                  // User image
+                                  CircleAvatar(
+                                    radius: 36.0,
+                                    backgroundColor: Colors.transparent,
+                                    backgroundImage: NetworkImage(
+                                      APIs.auth.currentUser?.uid ==
+                                              widget.transaction.fromId
+                                          ? APIs.me.image
+                                          : widget.chatUser.image,
+                                    ),
+                                  ),
+                                  // Status indicator
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      height: 15.0,
+                                      width: 15.0,
+                                      decoration: BoxDecoration(
+                                        color: APIs.auth.currentUser?.uid == widget.transaction.fromId ? Colors.green : widget.chatUser.isOnline
+                                            ? Colors.green
+                                            : Colors.red,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors
+                                              .white, // Optional: border around the status dot
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Expanded(
@@ -159,9 +196,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                           padding: const EdgeInsets.fromLTRB(
                                               8, 4, 4, 4),
                                           child: Text(
-                                            transaction_data.type == 'credit'
-                                                ? 'Given'
-                                                : 'Received',
+                                            transactionStatus,
                                             style:
                                                 const TextStyle(fontSize: 12),
                                           ),
@@ -606,9 +641,12 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return CommentCard(
+                                  chatUser: widget.chatUser,
                                   comment: _list[index],
                                   currentUserImageUrl: APIs.me.image,
                                   chatUserImageUrl: widget.chatUser.image,
+                                  transaction: widget.transaction,
+                                  isChatUserOnline: widget.chatUser.isOnline,
                                 );
                               });
                         } else {
@@ -689,6 +727,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                     icon: const Icon(
                       Icons.emoji_emotions,
                       size: 25,
+                      color: Colors.blue,
                     ),
                   ),
                   Expanded(

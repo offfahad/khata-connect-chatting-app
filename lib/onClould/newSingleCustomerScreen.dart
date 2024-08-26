@@ -583,6 +583,35 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                               child: statusIcon,
                                             ),
                                           ),
+                                        Positioned(
+                                          top:
+                                              5, // Position the notification below the status
+                                          left: 5,
+                                          child: StreamBuilder<int>(
+                                            stream: APIs.getUnreadCommnetCount(
+                                                widget.chatUser, transaction),
+                                            builder: (context, snapshot) {
+                                              int unreadCount =
+                                                  snapshot.data ?? 0;
+                                              return unreadCount > 0
+                                                  ? CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      radius: 10,
+                                                      child: Text(
+                                                        '$unreadCount',
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 8,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : const SizedBox.shrink();
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     );
                                   },

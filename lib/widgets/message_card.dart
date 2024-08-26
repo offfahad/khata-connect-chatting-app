@@ -263,9 +263,11 @@ class _MessageCardState extends State<MessageCard> {
                         color: Colors.red, size: 26),
                     name: 'Delete Message',
                     onTap: () async {
+                      //Navigator.pop(context);
                       await APIs.deleteMessage(widget.message).then((value) {
-                        //for hiding bottom sheet
-                        Navigator.pop(context);
+                        Dialogs.showSnackbar(context, 'Message deleted!');
+                      }).catchError((e) {
+                        print(e);
                       });
                     }),
 
@@ -370,21 +372,27 @@ class _OptionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () => onTap(),
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: mq.width * .05,
-              top: mq.height * .015,
-              bottom: mq.height * .015),
-          child: Row(children: [
+      onTap: () => onTap(),
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: mq.width * .05,
+            top: mq.height * .015,
+            bottom: mq.height * .015),
+        child: Row(
+          children: [
             icon,
             Flexible(
-                child: Text('    $name',
-                    style: const TextStyle(
-                        fontSize: 15,
-                        //color: Colors.black54,
-                        letterSpacing: 0.5)))
-          ]),
-        ));
+              child: Text(
+                '    $name',
+                style: const TextStyle(
+                    fontSize: 15,
+                    //color: Colors.black54,
+                    letterSpacing: 0.5),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

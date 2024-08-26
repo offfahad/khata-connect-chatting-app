@@ -713,6 +713,7 @@ class APIs {
     try {
       await ref.doc(time).set(comment.toJson());
       //await sendPushNotification(chatUser, commentText);
+      await sendMessage(chatUser, commentText, Type.text);
     } catch (e) {
       log('Failed to add comment: $e');
     }
@@ -727,4 +728,79 @@ class APIs {
         .orderBy('timestamp', descending: true)
         .snapshots();
   }
+
+  //update comment read status
+  //update read status of message
+  static Future<void> updateCommentReadStatus(
+      CommentFirebase comment, TransactionFirebase transaction) async {
+    firestore
+        .collection(
+            'chats/${getConversationID(comment.fromId)}/transactions/${transaction.id}/comments/')
+        .doc(comment.timestamp)
+        .update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
+  }
+
+  static Stream<int> getUnreadCommnetCount(
+      ChatUser chatUser, TransactionFirebase transaction) {
+    return firestore
+        .collection(
+            'chats/${getConversationID(chatUser.id)}/transactions/${transaction.id}/comments/')
+        .where('read', isEqualTo: '')
+        .where('fromId', isEqualTo: chatUser.id)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  //get all unread comments count
+  static Stream<List<TransactionFirebase>> getAllTransactionsForComment(
+      ChatUser chatUser) {
+    return firestore
+        .collection('chats/${getConversationID(chatUser.id)}/transactions/')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => TransactionFirebase.fromJson(doc.data()))
+            .toList());
+  }
+
+  static Stream<int> getUnreadCommentCountForTransaction(
+      String transactionId, ChatUser chatUser) {
+    return firestore
+        .collection(
+            'chats/${getConversationID(chatUser.id)}/transactions/$transactionId/comments/')
+        .where('read', isEqualTo: '')
+        .where('fromId', isEqualTo: chatUser.id)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  //delete message
+  static Future<void> deleteComment(ChatUser user, CommentFirebase comment,
+      TransactionFirebase transaction) async {
+    await firestore
+        .collection(
+            'chats/${getConversationID(user.id)}/transactions/${transaction.id}/comments/')
+        .doc(comment.timestamp)
+        .delete();
+  }
+
+  static Future<void> editComment(ChatUser user, CommentFirebase comment,
+      TransactionFirebase transaction, String updatedComment) async {
+    await firestore
+        .collection(
+            'chats/${getConversationID(user.id)}/transactions/${transaction.id}/comments/')
+        .doc(comment.timestamp)
+        .update({'commentText': updatedComment});
+  }
+
+// static Stream<int> getTotalUnreadCommentsCount(ChatUser chatUser) {
+//   return getAllTransactions(chatUser).asyncMap((transactions) {
+//     final streams = transactions.map((transaction) {
+//       return getUnreadCommentCountForTransaction(transaction.id, chatUser);
+//     }).toList();
+
+//     // Use StreamGroup to combine all streams and aggregate counts
+//     return StreamGroup.merge(streams)
+//         .fold(0, (previous, count) => previous + count);
+//   });
+// }
 }
