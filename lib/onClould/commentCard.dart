@@ -178,12 +178,15 @@ class CommentCard extends StatelessWidget {
 
   void _showBottomSheet(BuildContext context, bool isCurrentUser) {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
+          
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Wrap(
+              
               children: isCurrentUser
                   ? [
                       ListTile(
@@ -271,6 +274,7 @@ class CommentCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text('Edit Comment'),
           content: TextField(
             controller: _controller,
