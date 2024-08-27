@@ -10,7 +10,9 @@ class TransactionFirebase {
     required this.fromId,
     required this.updateBy,
     required this.updateTimestamp,
+    required this.backupAmount,
   });
+
   late final String id;
   late final String toId;
   late final String type;
@@ -21,7 +23,9 @@ class TransactionFirebase {
   late final String fromId;
   late final String updateBy;
   late final String updateTimestamp;
+  late final double backupAmount;
 
+  // Constructor to create an instance from JSON
   TransactionFirebase.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     toId = json['toId'].toString();
@@ -33,8 +37,10 @@ class TransactionFirebase {
     fromId = json['fromId'].toString();
     updateBy = json['updateBy']?.toString() ?? 'Unknown'; // Handle null
     updateTimestamp = json['updateTimestamp']?.toString() ?? ''; // Handle null
+    backupAmount = double.parse(json['backupAmount'].toString());
   }
 
+  // Method to convert an instance to JSON
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
@@ -46,7 +52,8 @@ class TransactionFirebase {
     data['timestamp'] = timestamp;
     data['fromId'] = fromId;
     data['updateBy'] = updateBy;
-    data['updateTimestamp'] = updateTimestamp; // Correct field name
+    data['updateTimestamp'] = updateTimestamp;
+    data['backupAmount'] = backupAmount;
     return data;
   }
 }

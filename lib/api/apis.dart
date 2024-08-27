@@ -520,6 +520,7 @@ class APIs {
         'fromId': user.uid,
         'updateBy': user.uid,
         'updateTimestamp': transaction.timestamp,
+        'backupAmount': transaction.backupAmount,
       };
 
       // Add transaction to the user's transaction collection
@@ -633,7 +634,8 @@ class APIs {
         'timestamp': updatedTransaction.timestamp,
         'fromId': updatedTransaction.fromId,
         'updateBy': updatedTransaction.updateBy,
-        'updateTimestamp': updatedTransaction.updateTimestamp
+        'updateTimestamp': updatedTransaction.updateTimestamp,
+        'backupAmount': updatedTransaction.backupAmount,
       };
 
       // Update the transaction document
@@ -674,12 +676,27 @@ class APIs {
 
       // Check if the current user is the author of the transaction
       if (currentUser != null && currentUser.uid == transaction.fromId) {
+        // Reference to the comments collection for the specific transaction
+        final commentsCollectionRef = firestore
+            .collection('chats/${getConversationID(chatUser.id)}/transactions/')
+            .doc(transaction.id)
+            .collection('comments');
+
+        // Fetch all documents in the comments collection
+        final commentsSnapshot = await commentsCollectionRef.get();
+
+        // Delete each document in the comments collection
+        for (var commentDoc in commentsSnapshot.docs) {
+          await commentDoc.reference.delete();
+        }
+
+        // Delete the transaction itself
         await firestore
             .collection('chats/${getConversationID(chatUser.id)}/transactions/')
             .doc(transaction.id)
             .delete();
 
-        log('Transaction deleted successfully');
+        log('Transaction and all related comments deleted successfully');
         return true; // Return true if deletion is successful
       } else {
         log('You are not authorized to delete this transaction.');

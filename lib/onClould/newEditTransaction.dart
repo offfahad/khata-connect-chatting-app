@@ -108,6 +108,7 @@ class _EditTransactionPageState extends State<EditTransactionPage> {
         fromId: widget.transaction.fromId,
         updateBy: widget.transaction.updateBy,
         updateTimestamp: widget.transaction.updateTimestamp,
+        backupAmount: widget.transaction.backupAmount,
       );
 
       try {
@@ -136,7 +137,7 @@ class _EditTransactionPageState extends State<EditTransactionPage> {
             ),
             Center(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.55,
+                height: MediaQuery.of(context).size.height * 0.53,
                 width: MediaQuery.of(context).size.width * .9,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),

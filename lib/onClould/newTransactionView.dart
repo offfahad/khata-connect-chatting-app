@@ -465,8 +465,10 @@ Description: ${widget.transaction.description.isNotEmpty ? transaction_data.desc
                                   // If the user is authorized, show the confirmation dialog
                                   if (isAuthorized) {
                                     showDialog(
+                                      
                                       context: context,
                                       builder: (context) => AlertDialog(
+                                        backgroundColor: Colors.white,
                                         title: const Text('Confirm Deletion'),
                                         content: const Text(
                                             'Are you sure you want to delete this transaction?'),

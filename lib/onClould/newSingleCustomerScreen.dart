@@ -417,7 +417,7 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                     height: mq.height * 0.02,
                   ),
                   Container(
-                    height: mq.height * 0.48,
+                    height: mq.height * 0.46,
                     width: mq.width * 0.9,
                     decoration: const BoxDecoration(),
                     child: Transform.translate(

@@ -87,6 +87,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         fromId: APIs.user.uid,
         updateBy: '',
         updateTimestamp: '',
+        backupAmount: 0.0,
       );
 
       try {
@@ -141,7 +142,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
             Center(
               child: Container(
-                height: mq.height * 0.55,
+                height: mq.height * 0.53,
                 width: mq.width * .9,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
