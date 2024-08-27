@@ -12,6 +12,7 @@ import 'package:flutter_notifications/widgets/message_card.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_notifications/api/apis.dart';
 import 'package:flutter_notifications/models/message.dart';
+import 'package:share/share.dart';
 
 class NewTransactionView extends StatefulWidget {
   final ChatUser chatUser;
@@ -396,24 +397,23 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                 // Show loading dialog
                                 Dialogs.showLoading(context);
 
-                                try {
-                                  await Future.delayed(const Duration(
-                                      seconds: 1)); // Simulate a share action
-                                  shareTransactionsToChat(
-                                      context, widget.transaction);
-                                  // Show success message
-                                  Dialogs.showSnackbar(
-                                      context, "Shared in chat successfully");
-                                } catch (e) {
-                                  // Handle errors here
-                                  print("Error sharing: $e");
-                                  Dialogs.showSnackbar(
-                                      context, "Failed to share");
-                                } finally {
-                                  // Dismiss the loading dialog
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
-                                }
+                                // Construct the share message with transaction details
+                                String message = '''
+Transaction Details:
+Name: ${APIs.auth.currentUser?.uid == widget.transaction.fromId ? APIs.me.name : widget.chatUser.name}
+Amount: ${_formatAmount(transaction_data.amount)}
+Date: ${_formatDateStringWithTime(transaction_data.timestamp)}
+Status: ${widget.transaction.status}
+Description: ${widget.transaction.description.isNotEmpty ? transaction_data.description : "N/A"}
+''';
+
+                                // Share the message
+                                Share.share(message,
+                                    subject: 'Transaction Details');
+
+                                // Dismiss the loading dialog
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
@@ -422,7 +422,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                 ),
                               ),
                               label: const Text(
-                                "Send",
+                                "Share",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 10),
                               ),
@@ -767,7 +767,7 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                     //     final ImagePicker picker = ImagePicker();
                     //     final List<XFile> images =
                     //         await picker.pickMultiImage(imageQuality: 70);
-                
+
                     //     for (var i in images) {
                     //       log('Image Path: ${i.path}');
                     //       setState(() => _isUploading = true);
