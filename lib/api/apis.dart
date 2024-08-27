@@ -142,6 +142,37 @@ class APIs {
     }
   }
 
+// for adding a chat user for our conversation
+  static Future<bool> addChatUserBottomSheet(String input) async {
+    // Determine if the input is an email or phone number
+    bool isEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(input);
+
+    // Query Firestore based on the input type
+    final data = await firestore
+        .collection('users')
+        .where(isEmail ? 'email' : 'phone', isEqualTo: input)
+        .get();
+
+    log('data: ${data.docs}');
+
+    if (data.docs.isNotEmpty && data.docs.first.id != user.uid) {
+      // User exists
+      log('user exists: ${data.docs.first.data()}');
+
+      firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('my_users')
+          .doc(data.docs.first.id)
+          .set({});
+
+      return true;
+    } else {
+      // User doesn't exist
+      return false;
+    }
+  }
+
   // for getting current user info
   static Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(user.uid).get().then((user) async {

@@ -110,15 +110,38 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Container(
-                                padding:
-                                    const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                                child: CircleAvatar(
-                                  radius: 36.0,
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage:
-                                      NetworkImage(widget.chatUser.image),
-                                ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                    child: CircleAvatar(
+                                      radius: 36.0,
+                                      backgroundColor: Colors.transparent,
+                                      backgroundImage:
+                                          NetworkImage(widget.chatUser.image),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 15,
+                                    child: Container(
+                                      height: 15.0,
+                                      width: 15.0,
+                                      decoration: BoxDecoration(
+                                        color: widget.chatUser.isOnline
+                                            ? Colors.green
+                                            : Colors.red,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors
+                                              .white, // Optional: border around the status dot
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                               Expanded(
                                 child: Container(

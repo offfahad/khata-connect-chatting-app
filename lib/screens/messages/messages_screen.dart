@@ -133,7 +133,7 @@ class _MessageScreenState extends State<MessageScreen> {
               FloatingActionButton.extended(
                 backgroundColor: Colors.white,
                 heroTag: null,
-                onPressed: _addChatUserDialog,
+                onPressed:_addChatUserDialog,
                 icon: const Icon(Icons.add),
                 label: const Text('Add User'),
               ),
@@ -284,4 +284,78 @@ class _MessageScreenState extends State<MessageScreen> {
       ),
     );
   }
+   void _showAddUserBottomSheet() {
+    String input = '';
+
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 30,
+          top: 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Add User',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Enter email or phone number',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              onChanged: (value) {
+                input = value;
+              },
+            ),
+            const SizedBox(height: 20),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton.icon(
+                
+                onPressed: () async {
+                  Navigator.pop(context);
+                  String trimmedInput = input.trim();
+                  if (trimmedInput.isNotEmpty) {
+                    await APIs.addChatUserBottomSheet(trimmedInput).then((value) {
+                      if (!value) {
+                        Dialogs.showSnackbar(
+                            context, 'User does not exist or cannot be added!');
+                      }
+                    });
+                  }
+                },
+                icon: const Icon(Icons.person_add, color: Colors.white,),
+                label: const Text('Add User', style: TextStyle(color: Colors.white),),
+                
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+   }
 }
