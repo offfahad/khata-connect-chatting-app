@@ -729,99 +729,102 @@ class _NewTransactionViewState extends State<NewTransactionView> {
               color: Colors.white,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      setState(() => _showEmoji = !_showEmoji);
-                    },
-                    icon: const Icon(
-                      Icons.emoji_emotions,
-                      size: 25,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      onTap: () {
-                        if (_showEmoji) {
-                          setState(() => _showEmoji = !_showEmoji);
-                        }
-                        FocusScope.of(context).unfocus();
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Type Comments...',
-                        hintStyle: TextStyle(fontSize: 12),
-                        border: InputBorder.none,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Row(
+                  children: [
+                    // IconButton(
+                    //   onPressed: () {
+                    //     //FocusScope.of(context).unfocus();
+                    //     setState(() => _showEmoji = !_showEmoji);
+                    //   },
+                    //   icon: const Icon(
+                    //     Icons.emoji_emotions,
+                    //     size: 25,
+                    //     color: Colors.blue,
+                    //   ),
+                    // ),
+                    Expanded(
+                      child: TextField(
+                        controller: _textController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        onTap: () {
+                          // if (_showEmoji) {
+                          //   setState(() => _showEmoji = !_showEmoji);
+                          // }
+                          //FocusScope.of(context).unfocus();
+                        },
+                        decoration: const InputDecoration(
+                          hintText: 'Type Comments...',
+                          hintStyle: TextStyle(fontSize: 12),
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                  // IconButton(
-                  //   onPressed: () async {
-                  //     final ImagePicker picker = ImagePicker();
-                  //     final List<XFile> images =
-                  //         await picker.pickMultiImage(imageQuality: 70);
-
-                  //     for (var i in images) {
-                  //       log('Image Path: ${i.path}');
-                  //       setState(() => _isUploading = true);
-                  //       await APIs.sendChatImage(widget.user, File(i.path));
-                  //       setState(() => _isUploading = false);
-                  //     }
-                  //   },
-                  //   icon: const Icon(
-                  //     Icons.image,
-                  //     size: 26,
-                  //   ),
-                  // ),
-                  // IconButton(
-                  //   onPressed: () async {
-                  //     final ImagePicker picker = ImagePicker();
-                  //     final XFile? image = await picker.pickImage(
-                  //         source: ImageSource.camera, imageQuality: 70);
-                  //     if (image != null) {
-                  //       log('Image Path: ${image.path}');
-                  //       setState(() => _isUploading = true);
-                  //       await APIs.sendChatImage(widget.user, File(image.path));
-                  //       setState(() => _isUploading = false);
-                  //     }
-                  //   },
-                  //   icon: const Icon(
-                  //     Icons.camera_alt_rounded,
-                  //     size: 26,
-                  //   ),
-                  // ),
-                  SizedBox(width: mq.width * .02),
-                ],
+                    // IconButton(
+                    //   onPressed: () async {
+                    //     final ImagePicker picker = ImagePicker();
+                    //     final List<XFile> images =
+                    //         await picker.pickMultiImage(imageQuality: 70);
+                
+                    //     for (var i in images) {
+                    //       log('Image Path: ${i.path}');
+                    //       setState(() => _isUploading = true);
+                    //       await APIs.sendChatImage(widget.user, File(i.path));
+                    //       setState(() => _isUploading = false);
+                    //     }
+                    //   },
+                    //   icon: const Icon(
+                    //     Icons.image,
+                    //     size: 26,
+                    //   ),
+                    // ),
+                    // IconButton(
+                    //   onPressed: () async {
+                    //     final ImagePicker picker = ImagePicker();
+                    //     final XFile? image = await picker.pickImage(
+                    //         source: ImageSource.camera, imageQuality: 70);
+                    //     if (image != null) {
+                    //       log('Image Path: ${image.path}');
+                    //       setState(() => _isUploading = true);
+                    //       await APIs.sendChatImage(widget.user, File(image.path));
+                    //       setState(() => _isUploading = false);
+                    //     }
+                    //   },
+                    //   icon: const Icon(
+                    //     Icons.camera_alt_rounded,
+                    //     size: 26,
+                    //   ),
+                    // ),
+                    SizedBox(width: mq.width * .02),
+                  ],
+                ),
               ),
             ),
           ),
           MaterialButton(
             onPressed: () {
               if (_textController.text.isNotEmpty) {
-                setState(() {
-                  // Close the emoji picker
-                  _showEmoji = false;
-                });
+                // setState(() {
+                //   // Close the emoji picker
+                //   _showEmoji = false;
+                // });
 
                 // Send the message
                 if (_list.isEmpty) {
-                  APIs.sendFirstMessage(
-                      widget.chatUser, _textController.text, Type.text);
+                  APIs.addTransactionsComments(widget.chatUser,
+                      widget.transaction, _textController.text.trim());
                 } else {
-                  APIs.sendMessage(
-                      widget.chatUser, _textController.text, Type.text);
+                  APIs.addTransactionsComments(widget.chatUser,
+                      widget.transaction, _textController.text.trim());
                 }
 
                 // Clear the text field
                 _textController.clear();
 
                 // Optionally, unfocus the text field to close the keyboard
-                FocusScope.of(context).unfocus();
+                //FocusScope.of(context).unfocus();
               }
             },
             minWidth: 0,

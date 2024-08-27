@@ -194,6 +194,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: Card(
+              color: Colors.white,
               shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(15))),
               child: Row(
