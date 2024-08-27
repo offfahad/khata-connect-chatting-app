@@ -556,7 +556,7 @@ class _NewSingleCustomerState extends State<NewSingleCustomer> {
                                               children: [
                                                 Text(
                                                   _formatAmount(
-                                                      transaction.amount),
+                                                      transaction.status == 'Declined' ? transaction.backupAmount : transaction.amount),
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.bold,

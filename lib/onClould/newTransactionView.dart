@@ -164,10 +164,14 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                           padding: const EdgeInsets.fromLTRB(
                                               8, 4, 4, 4),
                                           child: Text(
-                                            _formatAmount(
-                                                transaction_data.amount),
+                                            _formatAmount(transaction_data
+                                                        .status ==
+                                                    'Declined'
+                                                ? transaction_data.backupAmount
+                                                : transaction_data.amount),
                                             style: const TextStyle(
                                               fontSize: 12,
+                                              
                                             ),
                                           ),
                                         ),
@@ -311,7 +315,10 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                       widget.chatUser,
                                       widget.transaction,
                                       'Approved');
-
+                                  if (transaction_data.status == 'Declined') {
+                                    await APIs.restoreTransactionAmount(
+                                        widget.chatUser, widget.transaction);
+                                  }
                                   // Show success message
                                   Dialogs.showSnackbar(
                                       context, "Status Approved");
@@ -358,6 +365,9 @@ class _NewTransactionViewState extends State<NewTransactionView> {
                                       widget.chatUser,
                                       widget.transaction,
                                       'Declined');
+
+                                  await APIs.backupTransactionAmount(
+                                      widget.chatUser, widget.transaction);
 
                                   // Show success message
                                   Dialogs.showSnackbar(
@@ -465,7 +475,6 @@ Description: ${widget.transaction.description.isNotEmpty ? transaction_data.desc
                                   // If the user is authorized, show the confirmation dialog
                                   if (isAuthorized) {
                                     showDialog(
-                                      
                                       context: context,
                                       builder: (context) => AlertDialog(
                                         backgroundColor: Colors.white,

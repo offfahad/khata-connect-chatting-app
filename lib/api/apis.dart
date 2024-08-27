@@ -741,6 +741,64 @@ class APIs {
         ); // Assuming you have a fromJson method in TransactionFirebase
   }
 
+  static Future<void> backupTransactionAmount(
+      ChatUser chatUser, TransactionFirebase transaction) async {
+    try {
+      // Get the reference to the transaction document
+      final ref = firestore
+          .collection('chats/${getConversationID(chatUser.id)}/transactions/')
+          .doc(transaction.id);
+
+      // Fetch the transaction data
+      final doc = await ref.get();
+      if (doc.exists) {
+        // Get the current amount
+        final currentAmount = doc.data()!['amount'] as double;
+
+        // Update the transaction with backupAmount and reset amount to 0
+        await ref.update({
+          'backupAmount': currentAmount,
+          'amount': 0.0,
+        });
+
+        log('Transaction amount backed up and reset to 0.0');
+      } else {
+        log('Transaction not found for backup');
+      }
+    } catch (e) {
+      log('Failed to backup transaction amount: $e');
+    }
+  }
+
+  static Future<void> restoreTransactionAmount(
+      ChatUser chatUser, TransactionFirebase transaction) async {
+    try {
+      // Get the reference to the transaction document
+      final ref = firestore
+          .collection('chats/${getConversationID(chatUser.id)}/transactions/')
+          .doc(transaction.id);
+
+      // Fetch the transaction data
+      final doc = await ref.get();
+      if (doc.exists) {
+        // Get the backup amount
+        final backupAmount = doc.data()!['backupAmount'] as double;
+
+        // Update the transaction with restored amount and reset backupAmount to 0
+        await ref.update({
+          'amount': backupAmount,
+          'backupAmount': 0.0,
+        });
+
+        log('Transaction amount restored from backup');
+      } else {
+        log('Transaction not found for restore');
+      }
+    } catch (e) {
+      log('Failed to restore transaction amount: $e');
+    }
+  }
+
   static Future<void> addTransactionsComments(ChatUser chatUser,
       TransactionFirebase transaction, String commentText) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
