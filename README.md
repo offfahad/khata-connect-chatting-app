@@ -1,6 +1,6 @@
 # Khata Connect Chatting App
 
-Khata Connect is a comprehensive debit and credit management app developed in Flutter, designed specifically for small shopkeepers and businesses to manage their daily transactions efficiently.
+Khata Connect is a Flutter-based debit and credit management app designed for small businesses. It offers real-time transaction management, Firebase-powered updates and notifications, instant messaging, online/offline functionality, and editable transactions. This user-friendly app streamlines daily transactions, enhancing efficiency and communication.
 
 - Firebase Realtime Database
 - Push Notifications For Instant Updates
